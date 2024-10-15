@@ -12,5 +12,18 @@
         Chromium <span id="chrome-version"></span>,
         and Electron <span id="electron-version"></span>.
     </p>
+
+
+    <button id="open-second-window">Открыть Второе Окно</button>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+  
+      document.getElementById('open-second-window').addEventListener('click', () => {
+        ipcRenderer.send('open-second-window');
+      });
+    </script>
+
+    
 </body>
 </html>
