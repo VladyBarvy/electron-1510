@@ -30,9 +30,22 @@
 
     <div>
       <h1>Пользователи</h1>
-      <input type="text" id="nameInput" placeholder="Введите имя" />
-      <button id="addUserButton">Добавить пользователя</button>
-      <button id="fetchUsersButton">Загрузить всех пользователей</button> <!-- Новая кнопка -->
+    
+      <div>
+          <input type="text" id="nameInput" placeholder="Введите имя" />
+          <button id="addUserButton">Добавить пользователя</button>
+      </div>
+      
+      <div>
+          <button id="fetchUsersButton">Загрузить всех пользователей</button>
+      </div>
+      
+      <h2>Удалить пользователя:</h2>
+      <div>
+          <input type="text" id="deleteInput" placeholder="Введите имя для удаления" />
+          <button id="deleteUserButton">Удалить пользователя</button> <!-- Кнопка для удаления -->
+      </div>
+  
       <h2>Список пользователей:</h2>
       <ul id="userList"></ul>
     </div>

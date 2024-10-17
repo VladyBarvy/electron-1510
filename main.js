@@ -226,5 +226,14 @@ ipcMain.handle('get-users', () => {
   });
 });
 
-
-
+ipcMain.handle('delete-user', (event, name) => {
+  return new Promise((resolve, reject) => {
+      db.run(`DELETE FROM users WHERE name = ?`, [name], function(err) {
+          if (err) {
+              reject(err);
+          } else {
+              resolve(this.changes); // Возвращает количество удалённых строк
+          }
+      });
+  });
+});

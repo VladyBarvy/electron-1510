@@ -32,7 +32,7 @@ async function populatePorts() {
 async function addUser() {
   const name = document.getElementById('nameInput').value;
   await ipcRenderer.invoke('add-user', name);
-  loadUsers();
+  //loadUsers();
 }
 
 async function loadUsers() {
@@ -48,6 +48,20 @@ async function loadUsers() {
   });
 }
 
+async function deleteUser() {
+  const name = document.getElementById('deleteInput').value;
+  const result = await ipcRenderer.invoke('delete-user', name);
+  if (result > 0) {
+      alert(`Пользователь "${name}" удалён.`);
+  } else {
+      alert(`Пользователь "${name}" не найден.`);
+  }
+  //loadUsers(); // Обновляем список пользователей
+}
+
+
+
+
 async function fetchAndDisplayUsers() {
   await loadUsers(); // Вызываем функцию для загрузки пользователей
 }
@@ -57,6 +71,10 @@ document.getElementById('addUserButton').addEventListener('click', addUser);
 
 // Обработчик для кнопки извлечения пользователей
 document.getElementById('fetchUsersButton').addEventListener('click', fetchAndDisplayUsers);
+
+// Обработчик для кнопки удаления пользователей
+document.getElementById('deleteUserButton').addEventListener('click', deleteUser);
+
 
 
 loadUsers();  // Загружаем пользователей при старте
