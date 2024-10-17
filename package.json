@@ -21,5 +21,9 @@
   "devDependencies": {
     "electron": "^33.0.0",
     "electron-packager": "^17.1.2"
+  },
+  "dependencies": {
+    "serialport": "^12.0.0",
+    "sqlite3": "^5.1.7"
   }
 }

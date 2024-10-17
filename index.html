@@ -16,6 +16,28 @@
 
     <button id="open-second-window">Открыть Второе Окно</button>
 
+    <hr>
+
+    <div>
+      <h1>Выбор COM порта</h1>
+      <select id="comPorts"></select>
+      <button id="connectButton">Подключиться</button>
+      <pre id="dataOutput"></pre>
+    </div>
+
+
+    <hr>
+
+    <div>
+      <h1>Пользователи</h1>
+      <input type="text" id="nameInput" placeholder="Введите имя" />
+      <button id="addUserButton">Добавить пользователя</button>
+      <button id="fetchUsersButton">Загрузить всех пользователей</button> <!-- Новая кнопка -->
+      <h2>Список пользователей:</h2>
+      <ul id="userList"></ul>
+    </div>
+
+
     <script>
       const { ipcRenderer } = require('electron');
   
@@ -24,6 +46,8 @@
       });
     </script>
 
-    
+    <script src="renderer.js"></script>
+
+
 </body>
 </html>
