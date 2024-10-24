@@ -1,69 +1,91 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <meta charset="UTF-8">
+  <title>DemoApp-500</title>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 </head>
+
 <body>
-    <h1>Hello World!</h1>
-    <p>
-        We are using Node.js <span id="node-version"></span>,
-        Chromium <span id="chrome-version"></span>,
-        and Electron <span id="electron-version"></span>.
-    </p>
+
+  <!-- <h1>Hello World!</h1>
+  <p>
+    We are using Node.js <span id="node-version"></span>,
+    Chromium <span id="chrome-version"></span>,
+    and Electron <span id="electron-version"></span>.
+  </p>
 
 
-    <button id="open-second-window">Открыть Второе Окно</button>
+  <button id="open-second-window">Открыть Второе Окно</button>
 
-    <hr>
+  <hr>
 
-    <div>
-      <h1>Выбор COM порта</h1>
-      <select id="comPorts"></select>
-      <button id="connectButton">Подключиться</button>
-      <pre id="dataOutput"></pre>
+  <div>
+    <h1>Выбор COM порта</h1>
+    <select id="comPorts"></select>
+    <button id="connectButton">Подключиться</button>
+    <pre id="dataOutput"></pre>
+  </div>
+
+
+  <hr> -->
+
+
+
+  <button id="open-second-window">Открыть Второе Окно</button>
+
+  <hr>
+
+
+  <div>
+    <h1>Пользователи</h1>
+
+    <div style="margin-top: 10px; margin-bottom: 10px;">
+      <input type="text" id="nameInput" placeholder="Введите имя" />
     </div>
 
-
-    <hr>
-
-    <div>
-      <h1>Пользователи</h1>
-    
-      <div style="margin-top: 10px; margin-bottom: 10px;">
-        <input type="text" id="nameInput" placeholder="Введите имя" />
-      </div>
-      
-      <div style="margin-top: 10px; margin-bottom: 10px;">
-        <button id="addUserButton">Добавить пользователя</button>
-      </div>
-
-      <div style="margin-top: 10px; margin-bottom: 10px;">
-          <button id="fetchUsersButton">Загрузить всех пользователей</button>
-      </div>
-      
-      <h2>Удалить пользователя:</h2>
-      <div>
-          <input type="text" id="deleteInput" placeholder="Введите имя для удаления" />
-          <button id="deleteUserButton">Удалить пользователя</button> <!-- Кнопка для удаления -->
-      </div>
-  
-      <h2>Список пользователей:</h2>
-      <ul id="userList"></ul>
+    <div style="margin-top: 10px; margin-bottom: 10px;">
+      <button id="addUserButton">Добавить пользователя</button>
     </div>
 
+    <div style="margin-top: 10px; margin-bottom: 10px;">
+      <button id="fetchUsersButton">Загрузить всех пользователей</button>
+    </div>
 
-    <script>
-      const { ipcRenderer } = require('electron');
-  
-      document.getElementById('open-second-window').addEventListener('click', () => {
-        ipcRenderer.send('open-second-window');
-      });
-    </script>
+    <h2>Удалить пользователя:</h2>
+    <div>
+      <input type="text" id="deleteInput" placeholder="Введите имя для удаления" />
+      <button id="deleteUserButton">Удалить пользователя</button> <!-- Кнопка для удаления -->
+    </div>
 
-    <script src="renderer.js"></script>
+    <h2>Список пользователей:</h2>
+    <ul id="userList"></ul>
+  </div>
+
+  <div>
+    <button id="upload-btn">Загрузить Excel файл</button>
+    <input type="file" id="file-input" style="display: none;" />
+  </div>
+
+  <hr>
+
+  <div>
+    <h1>Загрузить Excel файл</h1>
+    <button id="loadExcel">Загрузить Excel</button>
+    <table id="dataTable">
+      <thead>
+        <tr id="tableHeader"></tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+
+
+  <script src="renderer.js"></script>
 
 
 </body>
+
 </html>

@@ -9,6 +9,28 @@
   <h1>Second Window</h1>
   <button id="close-window">Закрыть</button>
 
+
+  <hr>
+
+  <div>
+    <h1>Загрузить Excel файл</h1>
+    <button id="loadExcel_second">Загрузить данные</button>
+    <table id="dataTable">
+      <thead>
+        <tr id="tableHeader"></tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+
+
+
+
+
+
+
+
   <script>
     const { ipcRenderer } = require('electron');
 
@@ -16,5 +38,10 @@
       ipcRenderer.send('close-second-window');
     });
   </script>
+
+
+
+
+
 </body>
 </html>

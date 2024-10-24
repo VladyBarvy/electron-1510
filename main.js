@@ -1,16 +1,15 @@
 //const { app, BrowserWindow } = require('electron/main')
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const SerialPort = require('serialport');
 //const path = require('node:path')
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
-
+const XLSX = require('xlsx');
 
 
 let win;
 let secondWin;
 let db;
-
 
 
 
@@ -26,6 +25,19 @@ function createDatabase() {
       }
   });
 }
+
+
+
+
+
+
+
+const dbPath = path.join(__dirname, 'database.db');
+
+
+
+
+
 
 
 
@@ -110,6 +122,31 @@ ipcMain.on('close-second-window', (event) => {
 //   });
 // });
 
+
+
+
+
+
+// альтернативный код загрузки данных из Excel-файла
+ipcMain.handle('dialog:openFile', async () => {
+  const result = await dialog.showOpenDialog(win, {
+      properties: ['openFile'],
+      filters: [
+          { name: 'Excel Files', extensions: ['xlsx'] }
+      ],
+  });
+
+  if (result.canceled) {
+      return;
+  } else {
+      const filePath = result.filePaths[0];
+      const workbook = XLSX.readFile(filePath);
+      const sheetName = workbook.SheetNames[0];
+      const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+      return data; // Возвращаем данные
+  }
+});
 
 
 
