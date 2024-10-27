@@ -15,16 +15,60 @@ let db;
 
 function createDatabase() {
   db = new sqlite3.Database('mydatabase.db', (err) => {
-      if (err) {
-          console.error('Ошибка при подключении к базе данных:', err.message);
-      } else {
-          db.run(`CREATE TABLE IF NOT EXISTS users (
+    if (err) {
+      console.error('Ошибка при подключении к базе данных:', err.message);
+    } else {
+      db.run(`CREATE TABLE IF NOT EXISTS users (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               name TEXT NOT NULL
           )`);
-      }
+    }
   });
 }
+
+
+
+
+
+
+
+
+
+// // Добавление данных в SQLite
+// const db3 = new sqlite3.Database('./special_database.db');
+
+// // Формируем запрос на создание таблицы
+// const columnDefs = data[0].map((col, index) => {
+//     return `column${index + 1} TEXT`; // Название столбца column1, column2 и т.д.
+// }).join(', ');
+
+// db3.serialize(() => {
+//     db3.run(`CREATE TABLE IF NOT EXISTS data (${columnDefs})`); // Создаем таблицу
+
+//     const stmt = db3.prepare(`INSERT INTO data VALUES (${data[0].map(() => '?').join(', ')})`);
+
+//     // Вставка данных
+//     for (let i = 1; i < data.length; i++) {
+//         stmt.run(data[i]);
+//     }
+
+//     stmt.finalize();
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -49,7 +93,7 @@ const dbPath = path.join(__dirname, 'database.db');
 
 
 
-function createWindow () {
+function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -89,16 +133,16 @@ function createWindow () {
 
 
   // Обработчик для открытия второго окна
-ipcMain.on('open-second-window', (event) => {
-  createSecondWindow();
-});
+  ipcMain.on('open-second-window', (event) => {
+    createSecondWindow();
+  });
 
-// Обработчик для закрытия второго окна
-ipcMain.on('close-second-window', (event) => {
-  if (secondWin) {
-    secondWin.close();
-  }
-});
+  // Обработчик для закрытия второго окна
+  ipcMain.on('close-second-window', (event) => {
+    if (secondWin) {
+      secondWin.close();
+    }
+  });
 
 }
 
@@ -130,22 +174,28 @@ ipcMain.on('close-second-window', (event) => {
 // альтернативный код загрузки данных из Excel-файла
 ipcMain.handle('dialog:openFile', async () => {
   const result = await dialog.showOpenDialog(win, {
-      properties: ['openFile'],
-      filters: [
-          { name: 'Excel Files', extensions: ['xlsx'] }
-      ],
+    properties: ['openFile'],
+    filters: [
+      { name: 'Excel Files', extensions: ['xlsx'] }
+    ],
   });
 
   if (result.canceled) {
-      return;
+    return;
   } else {
-      const filePath = result.filePaths[0];
-      const workbook = XLSX.readFile(filePath);
-      const sheetName = workbook.SheetNames[0];
-      const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    const filePath = result.filePaths[0];
+    const workbook = XLSX.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-      return data; // Возвращаем данные
+    return data; // Возвращаем данные
   }
+
+
+
+
+
+
 });
 
 
@@ -171,12 +221,12 @@ ipcMain.handle('dialog:openFile', async () => {
 
 ipcMain.handle('get-com-ports', async () => {
   try {
-      const ports = await SerialPort.list();
-      console.log('Available COM ports:', ports); // Отладочный вывод
-      return ports;
+    const ports = await SerialPort.list();
+    console.log('Available COM ports:', ports); // Отладочный вывод
+    return ports;
   } catch (error) {
-      console.error('Error listing ports:', error); // Вывод ошибки
-      return [];
+    console.error('Error listing ports:', error); // Вывод ошибки
+    return [];
   }
 });
 
@@ -241,36 +291,63 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('add-user', (event, name) => {
   return new Promise((resolve, reject) => {
-      db.run(`INSERT INTO users (name) VALUES (?)`, [name], function(err) {
-          if (err) {
-              reject(err);
-          } else {
-              resolve(this.lastID);
-          }
-      });
+    db.run(`INSERT INTO users (name) VALUES (?)`, [name], function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(this.lastID);
+      }
+    });
   });
 });
 
 ipcMain.handle('get-users', () => {
   return new Promise((resolve, reject) => {
-      db.all(`SELECT * FROM users`, [], (err, rows) => {
-          if (err) {
-              reject(err);
-          } else {
-              resolve(rows);
-          }
-      });
+    db.all(`SELECT * FROM users`, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
   });
 });
 
 ipcMain.handle('delete-user', (event, name) => {
   return new Promise((resolve, reject) => {
-      db.run(`DELETE FROM users WHERE name = ?`, [name], function(err) {
-          if (err) {
-              reject(err);
-          } else {
-              resolve(this.changes); // Возвращает количество удалённых строк
-          }
-      });
+    db.run(`DELETE FROM users WHERE name = ?`, [name], function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(this.changes); // Возвращает количество удалённых строк
+      }
+    });
   });
 });
+
+
+
+
+
+
+
+
+
+
+// Обработка открытия диалогового окна для выбора файла
+ipcMain.handle('dialog:openFile', async () => {
+  const result = await dialog.showOpenDialog(secondWin, {
+      properties: ['openFile'],
+      filters: [
+          { name: 'Excel Files', extensions: ['xlsx'] }
+      ]
+  });
+  return result.filePaths;
+});
+
+
+
+
+
+
+

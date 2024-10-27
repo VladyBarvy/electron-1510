@@ -1,5 +1,5 @@
 const { ipcRenderer } = require('electron');
-
+const sqlite3 = require('sqlite3').verbose();
 /*
 async function populatePorts() {
   try {
@@ -33,7 +33,7 @@ async function populatePorts() {
 async function addUser() {
   const name = document.getElementById('nameInput').value;
   await ipcRenderer.invoke('add-user', name);
-  //loadUsers();
+  loadUsers();
 }
 
 async function loadUsers() {
@@ -57,7 +57,7 @@ async function deleteUser() {
   } else {
     alert(`Пользователь "${name}" не найден.`);
   }
-  //loadUsers(); // Обновляем список пользователей
+  loadUsers(); // Обновляем список пользователей
 }
 
 
@@ -110,36 +110,36 @@ document.getElementById('open-second-window').addEventListener('click', () => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// загрузка Excel-файла
-const { remote } = require('electron');
-const XLSX = require('xlsx');
+// загрузка Excel-файла    Этот код рабочий, но зарезервирован
+// const { remote } = require('electron');
+// const XLSX = require('xlsx');
 
-document.getElementById('upload-btn').addEventListener('click', () => {
-  document.getElementById('file-input').click();
-});
+// document.getElementById('upload-btn').addEventListener('click', () => {
+//   document.getElementById('file-input').click();
+// });
 
-document.getElementById('file-input').addEventListener('change', (event) => {
-  const file = event.target.files[0];
+// document.getElementById('file-input').addEventListener('change', (event) => {
+//   const file = event.target.files[0];
 
-  if (file) {
-    const reader = new FileReader();
+//   if (file) {
+//     const reader = new FileReader();
 
-    reader.onload = (e) => {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
+//     reader.onload = (e) => {
+//       const data = new Uint8Array(e.target.result);
+//       const workbook = XLSX.read(data, { type: 'array' });
 
-      // Предположим, что вы хотите получить данные из первого листа
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+//       // Предположим, что вы хотите получить данные из первого листа
+//       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+//       const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-      // Присваиваем данные массиву datamass
-      const datamass = json;
-      console.log(datamass);
-    };
+//       // Присваиваем данные массиву datamass
+//       const datamass = json;
+//       console.log(datamass);
+//     };
 
-    reader.readAsArrayBuffer(file);
-  }
-});
+//     reader.readAsArrayBuffer(file);
+//   }
+// });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -158,14 +158,13 @@ document.getElementById('file-input').addEventListener('change', (event) => {
 
 // альтернатива загрузки excel-файла
 //const { ipcRenderer } = require('electron');
-
+let datamass_global = {};
 document.getElementById('loadExcel').addEventListener('click', async () => {
   const data = await ipcRenderer.invoke('dialog:openFile');
   if (data) {
-    // console.log(data); // Ваш массив данных
-    // Присваиваем данные массиву
-    const datamass = data;
-    console.log(datamass);
+    //console.log(typeof(data)); // Ваш массив данных
+    datamass_global = data; // Присваиваем данные объекту
+    createDatabaseSecond(data);
     updateTable(data);
   }
 });
@@ -198,6 +197,42 @@ function updateTable(data) {
     });
     tableBody.appendChild(tr);
   });
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+
+
+
+function createDatabaseSecond(data) {
+  db3 = new sqlite3.Database('special_database.db', (err) => {
+    if (err) {
+      console.error('Ошибка при подключении к базе данных:', err.message);
+    } else {
+
+      const columnDefs = data[0].map((col, index) => {
+        return `column${index + 1} TEXT NOT NULL`; // Название столбца column1, column2 и т.д.
+      }).join(', ');
+
+
+      db3.run(`CREATE TABLE IF NOT EXISTS data (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${columnDefs}
+      )`); // Создаем таблицу
+
+
+      // db3.serialize(() => {
+      //   const stmt = db3.prepare(`INSERT INTO data VALUES (${data[0].map(() => '?').join(', ')})`);
+      //   for (let i = 1; i < data.length; i++) {  // Вставка данных
+      //     stmt.run(data[i]);
+      //   }
+      //   stmt.finalize();
+      // });
+      // db3.close();
+    }
+  });
+}
